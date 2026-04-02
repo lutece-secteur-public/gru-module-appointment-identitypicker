@@ -1,0 +1,57 @@
+<#include "/admin/plugins/identitypicker/identitypicker.ftl" />
+<#-- Build identity picker model variables from entry fields -->
+<#assign lstAttributesField=getFieldByCode( entry, "lst_attributes")>
+<#assign lstAttributes=lstAttributesField.value?split(",")>
+<#assign bCreateIdentity=getFieldByCode( entry, "create_identity").value>
+<#assign bModifyIdentity=getFieldByCode( entry, "modify_identity").value>
+<#-- Build JSON field mappings for identity picker widget -->
+<#assign jsonAttrs=" { 'lastname': 'family_name', 'firstname': 'first_name', 'email': 'email', 'emailConfirm': 'email', ">
+<#list lstAttributes as attr>
+<#assign jsonAttrs=jsonAttrs + " 'my-form-" + attr + "' : '" + attr + "', ">
+</#list>
+<#assign jsonAttrs=jsonAttrs + " 'field_customer_id': 'customer_id' } ">
+
+<#if list_responses?has_content>
+	<#list list_responses as response>
+		<#if response.entry.idEntry == entry.idEntry>
+			<#if response.toStringValueResponse??>
+				<#assign inputValue = response.toStringValueResponse />
+			</#if>
+			<#if response.entry.error??>
+				<#assign groupStyle = 'error' />
+			</#if>
+		</#if>
+	</#list>
+</#if>
+
+<@input type="hidden" id="field_customer_id" name="field_customer_id" />
+
+<#list lstAttributes as attribute>
+	<@formGroup labelFor='${attribute}' labelKey='${getFieldByCode( entry, attribute ).title}' helpKey=entry.helpMessage!'' groupStyle=groupStyle!'' >
+		<@input type="text" id="my-form-${attribute}" readonly=true name="${attribute}" />
+	</@formGroup>
+</#list>
+
+<@formGroup labelFor='idpicker' helpKey=entry.helpMessage!'' groupStyle=groupStyle!'' >
+	<@identityPicker fieldMappings=jsonAttrs createTask=true creation=bCreateIdentity?boolean update=bModifyIdentity?boolean btnLabel='#i18n{module.identitypicker.appointment.fillEntry.labelIdPicker}' />
+</@formGroup>
+
+<#if list_responses??>
+  <#list list_responses as response>
+    <#if response.entry.idEntry == entry.idEntry && response.entry.error?? && response.entry.error.isDisplayableError>
+      <#assign error = response.entry.error>
+      <@alert color='danger'><#if error.mandatoryError>#i18n{appointment.message.mandatory.entry}<#else>${error.errorMessage}</#if></@alert>
+    </#if>
+  </#list>
+</#if>
+<#assign confirmField=getFieldByCode( entry, "confirm_field")>
+<#if confirmField.value?boolean>
+	<#assign field_width=getFieldValueByCode( entry, "width")>
+	<#assign field_max_size=getFieldValueByCode( entry, "max_size")>
+	<#if field_max_size?number!=-1>
+		<#assign maxlength = field_max_size?number />
+	</#if>
+	<@formGroup labelFor='attribute${entry.idEntry}_confirm_field' labelKey='${confirmField.title}' mandatory=entry.mandatory htmlRequired=false >
+		<@input type='text' name='attribute${entry.idEntry}_confirm_field' id='attribute${entry.idEntry}_confirm_field' inputSize=field_width?number value='' maxlength=maxlength!0/>
+    </@formGroup>
+</#if>

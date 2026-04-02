@@ -1,0 +1,61 @@
+<#include "/admin/plugins/identitypicker/identitypicker.ftl" />
+<#-- Build identity picker model variables from entry fields -->
+<#assign lstAttributesField=getFieldByCode( entry, "lst_attributes")>
+<#assign lstAttributes=lstAttributesField.value?split(",")>
+<#assign bCreateIdentity=getFieldByCode( entry, "create_identity").value>
+<#assign bModifyIdentity=getFieldByCode( entry, "modify_identity").value>
+<#-- Build JSON field mappings for identity picker widget -->
+<#assign jsonAttrs=" { ">
+<#list lstAttributes as attr>
+<#assign jsonAttrs=jsonAttrs + " 'my-form-" + attr + "' : '" + attr + "', ">
+</#list>
+<#assign jsonAttrs=jsonAttrs + " 'field_customer_id': 'customer_id' } ">
+
+<#if list_responses??>
+	<#list list_responses as response>
+		<#if response.entry.idEntry == entry.idEntry && response.entry.error?? && response.entry.error.isDisplayableError>
+			<#assign hasError = true>
+		</#if>
+	</#list>
+</#if>
+
+<input type="hidden" id="field_customer_id" name="field_customer_id" />
+
+<#list lstAttributes as attribute>
+<div class="form-group<#if hasError??> has-error</#if>">
+	<label class="col-xs-12 control-label" for="my-form-${attribute}">${getFieldByCode( entry, attribute ).title}<#if entry.mandatory> *</#if></label>
+	<div class="col-xs-12">
+		<input type="text" class="form-control" id="my-form-${attribute}" name="${attribute}" readonly />
+		<#if entry.helpMessage?exists && entry.helpMessage!=''>
+			<p class="help-block">${entry.helpMessage}</p>
+		</#if>
+	</div>
+</div>
+</#list>
+
+<div class="form-group">
+	<div class="col-xs-12">
+		<@identityPicker fieldMappings=jsonAttrs createTask=true creation=bCreateIdentity?boolean update=bModifyIdentity?boolean btnLabel='#i18n{module.identitypicker.appointment.fillEntry.labelIdPicker}' />
+	</div>
+</div>
+
+<#if list_responses??>
+	<#list list_responses as response>
+		<#if response.entry.idEntry == entry.idEntry && response.entry.error?? && response.entry.error.isDisplayableError>
+			<#assign error = response.entry.error>
+			<span class="help-block"><#if error.mandatoryError>#i18n{appointment.message.mandatory.entry}<#else>${error.errorMessage}</#if></span>
+		</#if>
+	</#list>
+</#if>
+
+<#assign confirmField=getFieldByCode( entry, "confirm_field")>
+<#if confirmField.value?boolean>
+<div class="form-group">
+	<label class="col-xs-12 control-label" for="attribute${entry.idEntry}_confirm_field">${confirmField.title}<#if entry.mandatory> *</#if></label>
+	<#assign field_width=getFieldValueByCode( entry, "width")>
+	<#assign field_max_size=getFieldValueByCode( entry, "max_size")>
+	<div class="col-xs-12">
+		<input type="text" name="attribute${entry.idEntry}_confirm_field" id="attribute${entry.idEntry}_confirm_field" size="${field_width?number}" value="" maxlength="${field_max_size}" class="form-control" />
+	</div>
+</div>
+</#if>

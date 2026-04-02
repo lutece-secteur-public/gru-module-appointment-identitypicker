@@ -1,0 +1,52 @@
+<#include "/admin/plugins/identitypicker/identitypicker.ftl" />
+<#-- Build identity picker model variables from entry fields -->
+<#assign lstAttributesField=getFieldByCode( entry, "lst_attributes")>
+<#assign lstAttributes=lstAttributesField.value?split(",")>
+<#assign storage=getFieldByCode( entry, "storage_identity")>
+<#if storage.value?boolean>
+	<#assign checkedValueStorage = true />
+<#else>
+	<#assign checkedValueStorage = false />
+</#if>
+
+<@row>
+    <@columns sm=3><@p class='text-right font-weight-bold'>${entry.title!''}</@p></@columns>
+    <@columns sm=9>
+
+    <#if list_responses?has_content>
+    <#if checkedValueStorage>
+	    <#assign cpt=0>
+        <#list list_responses?sort_by('sortOrder') as response>
+            <#if response.toStringValueResponse?matches(regex_url)>
+                <@p>
+                    <@link href=response.toStringValueResponse! class='url' title='${response.toStringValueResponse!} - #i18n{portal.site.portal_footer.newWindow}' target='_blank'>${response.toStringValueResponse!''}</@link>
+                </@p>
+            <#else>
+            	<#if cpt != 0 >
+               	   <#assign responseAttr = getResponseContainingTheFieldWithCode( list_responses, lstAttributes[cpt - 1] ).toStringValueResponse >
+               	   <@p>${getFieldByCode( entry, lstAttributes[cpt - 1] ).title} : ${responseAttr!''}</@p>
+               </#if>
+            </#if>
+            <#assign cpt=cpt+1>
+        </#list>
+    <#else>
+    		<#-- Build JSON field mappings for identity picker widget -->
+    		<#assign jsonAttrs=" { ">
+			<#list lstAttributes as attr>
+			<#assign jsonAttrs=jsonAttrs + " 'my-form-" + attr + "' : '" + attr + "', ">
+			</#list>
+			<#assign jsonAttrs=jsonAttrs + " 'field_customer_id': 'customer_id' } ">
+
+     		<#assign cptAttributes=0>
+            <#list lstAttributes as attribute>
+			<@p>
+				${getFieldByCode( entry, lstAttributes[cptAttributes] ).title} : <span id="my-form-${attribute}" class="me-2"></span>
+			</@p>
+            <#assign cptAttributes=cptAttributes+1>
+		</#list>
+		<@identityPicker fieldMappings=jsonAttrs cuid=list_responses[0].toStringValueResponse autoFill=true btnLabel='#i18n{module.identitypicker.appointment.readEntry.readIdPicker}'/>
+    </#if>
+    </#if>
+
+    </@columns>
+</@row>

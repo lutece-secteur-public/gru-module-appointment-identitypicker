@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd" >
+	
+
+    <bean id="identitypicker-appointment.entryTypeIdentityPicker" class="fr.paris.lutece.plugins.identitypicker.modules.appointment.service.entrytype.EntryTypeIdentityPicker" >
+        <property name="anonymizationTypes">
+            <list>
+                <ref bean="genericattributes.entryIdAnonymizationType" />
+                <ref bean="genericattributes.entryCodeAnonymizationType" />
+                <ref bean="genericattributes.responseIdAnonymizationType" />
+                <ref bean="genericattributes.randomGuidAnonymizationType" />
+                <ref bean="genericattributes.randomNumberAnonymizationType" />
+                <ref bean="genericattributes.defaultValueAnonymizationType" />
+                <ref bean="appointment.formIdAnonymizationType" />
+            </list>
+        </property>
+    </bean>
+
+</beans>
