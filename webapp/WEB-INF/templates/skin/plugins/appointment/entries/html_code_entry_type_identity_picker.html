@@ -1,16 +1,6 @@
-<#include "/admin/plugins/identitypicker/identitypicker.ftl" />
 <#-- Build identity picker model variables from entry fields -->
 <#assign lstAttributesField=getFieldByCode( entry, "lst_attributes")>
 <#assign lstAttributes=lstAttributesField.value?split(",")>
-<#assign bCreateIdentity=getFieldByCode( entry, "create_identity").value>
-<#assign bModifyIdentity=getFieldByCode( entry, "modify_identity").value>
-<#-- Build JSON field mappings for identity picker widget -->
-<#assign jsonAttrs=" { ">
-<#list lstAttributes as attr>
-<#assign jsonAttrs=jsonAttrs + " 'my-form-" + attr + "' : '" + attr + "', ">
-</#list>
-<#assign jsonAttrs=jsonAttrs + " 'field_customer_id': 'customer_id' } ">
-
 <#if list_responses??>
 	<#list list_responses as response>
 		<#if response.entry.idEntry == entry.idEntry && response.entry.error?? && response.entry.error.isDisplayableError>
@@ -32,12 +22,6 @@
 	</div>
 </div>
 </#list>
-
-<div class="form-group">
-	<div class="col-xs-12">
-		<@identityPicker fieldMappings=jsonAttrs createTask=true creation=bCreateIdentity?boolean update=bModifyIdentity?boolean btnLabel='#i18n{module.identitypicker.appointment.fillEntry.labelIdPicker}' />
-	</div>
-</div>
 
 <#if list_responses??>
 	<#list list_responses as response>

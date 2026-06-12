@@ -1,4 +1,3 @@
-<#include "/admin/plugins/identitypicker/identitypicker.ftl" />
 <div class="row nextStepTitleRow">
 	<div class="col-xs-12">
 		<div class="container">
@@ -255,13 +254,6 @@
 													</#if>
 												</div>
 											</#if>
-										</div>
-									</div>
-									<div class="col-xs-12">
-										<div class="form-group">
-											<div class="col-xs-12">
-												<@identityPicker fieldMappings=" { 'lastname': 'family_name', 'firstname': 'first_name', 'email': 'email', 'emailConfirm': 'email' } " createTask=false creation=false update=false btnLabel='#i18n{module.identitypicker.appointment.fillEntry.labelIdPicker}' />
-											</div>
 										</div>
 									</div>
 									<#if form.maxPeoplePerAppointment &gt; 1>
