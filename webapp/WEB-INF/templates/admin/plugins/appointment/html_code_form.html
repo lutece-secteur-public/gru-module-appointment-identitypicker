@@ -156,9 +156,12 @@
 	}
 	else return true;
 	};
-   $(document).ready(function () {
-      $('#emailConfirm').bind('paste', function (e) {
-         e.preventDefault();
-      });
+   document.addEventListener('DOMContentLoaded', function () {
+      const emailConfirm = document.getElementById('emailConfirm');
+      if (emailConfirm) {
+         emailConfirm.addEventListener('paste', function (e) {
+            e.preventDefault();
+         });
+      }
    });
 </script>

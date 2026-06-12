@@ -82,20 +82,20 @@
 							<div class="col-xs-12 formGroupContainer">
 								<#if infos?? || errors??>
 									<#if infos??>
-										<#if infos?size &gt; 0 >
+										<#if (infos!)?size &gt; 0 >
 											<div class="alert alert-info" id='messages_infos_div'>
 												<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-												<#list infos as info>
+												<#list (infos![]) as info>
 													<i class='fa fa-info-circle' /></i> ${info.message}<br />
 												</#list>
 											</div>
 										</#if>
 									</#if>
 									<#if errors??>
-										<#if errors?size &gt; 0 >
+										<#if (errors!)?size &gt; 0 >
 											<div class="alert alert-danger" id='messages_infos_div'>
 												<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-												<#list errors as error>
+												<#list (errors![]) as error>
 												<i class='fa fa-exclamation-circle' /></i> ${error.message}<br />
 												</#list>
 											</div>
@@ -361,10 +361,17 @@ function minmax(value, min, max)
         return ${nbplaces};
     else return value;
 }
-$(document).ready(function () {
-      $('#emailConfirm').bind('paste', function (e) {
-         e.preventDefault();
-      });
-	  $('#messageview').html( $('#infomessage').html() );
-   });
+document.addEventListener('DOMContentLoaded', function () {
+	const emailConfirm = document.getElementById('emailConfirm');
+	if (emailConfirm) {
+		emailConfirm.addEventListener('paste', function (e) {
+			e.preventDefault();
+		});
+	}
+	const messageview = document.getElementById('messageview');
+	const infomessage = document.getElementById('infomessage');
+	if (messageview && infomessage) {
+		messageview.innerHTML = infomessage.innerHTML;
+	}
+});
 </script>

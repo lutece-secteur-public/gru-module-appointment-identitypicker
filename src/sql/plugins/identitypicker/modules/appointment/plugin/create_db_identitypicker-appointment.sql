@@ -1,3 +1,7 @@
+-- liquibase formatted sql
+-- changeset lutece-global-pom:create_db_identitypicker-appointment.sql
+-- preconditions onFail:MARK_RAN onError:WARN
+
 
 --
 -- Structure for table identitypicker_appointment_field_id_picker

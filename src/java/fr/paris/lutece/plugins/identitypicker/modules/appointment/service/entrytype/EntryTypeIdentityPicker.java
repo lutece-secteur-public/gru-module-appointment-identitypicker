@@ -33,13 +33,18 @@
  */
 package fr.paris.lutece.plugins.identitypicker.modules.appointment.service.entrytype;
 
+import java.util.List;
 import java.util.Locale;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.servlet.http.HttpServletRequest;
 
 import fr.paris.lutece.plugins.genericattributes.business.Entry;
 import fr.paris.lutece.plugins.genericattributes.business.Field;
 import fr.paris.lutece.plugins.genericattributes.modules.identitypicker.service.entrytype.AbstractEntryTypeIdentityPicker;
+import fr.paris.lutece.plugins.genericattributes.service.anonymization.IEntryAnonymizationType;
 import fr.paris.lutece.util.ReferenceItem;
 import fr.paris.lutece.util.ReferenceList;
 
@@ -48,8 +53,41 @@ import fr.paris.lutece.util.ReferenceList;
  * class EntryTypeIdentityPicker
  *
  */
+@ApplicationScoped
+@Named( "identitypicker-appointment.entryTypeIdentityPicker" )
 public class EntryTypeIdentityPicker extends AbstractEntryTypeIdentityPicker
 {
+    /**
+     * Inject the anonymization types supported by this entry type.
+     *
+     * @param entryId
+     *            the entry id anonymization type
+     * @param entryCode
+     *            the entry code anonymization type
+     * @param responseId
+     *            the response id anonymization type
+     * @param randomGuid
+     *            the random GUID anonymization type
+     * @param randomNumber
+     *            the random number anonymization type
+     * @param defaultValue
+     *            the default value anonymization type
+     * @param formId
+     *            the form id anonymization type
+     */
+    @Inject
+    public void addAnonymizationTypes(
+            @Named( "genericattributes.entryIdAnonymizationType" ) IEntryAnonymizationType entryId,
+            @Named( "genericattributes.entryCodeAnonymizationType" ) IEntryAnonymizationType entryCode,
+            @Named( "genericattributes.responseIdAnonymizationType" ) IEntryAnonymizationType responseId,
+            @Named( "genericattributes.randomGuidAnonymizationType" ) IEntryAnonymizationType randomGuid,
+            @Named( "genericattributes.randomNumberAnonymizationType" ) IEntryAnonymizationType randomNumber,
+            @Named( "genericattributes.defaultValueAnonymizationType" ) IEntryAnonymizationType defaultValue,
+            @Named( "appointment.formIdAnonymizationType" ) IEntryAnonymizationType formId )
+    {
+        setAnonymizationTypes( List.of( entryId, entryCode, responseId, randomGuid, randomNumber, defaultValue, formId ) );
+    }
+
     private static final String TEMPLATE_CREATE = "admin/plugins/appointment/entries/create_entry_type_identity_picker.html";
     private static final String TEMPLATE_MODIFY = "admin/plugins/appointment/entries/modify_entry_type_identity_picker.html";
     private static final String TEMPLATE_READONLY_BACKOFFICE = "admin/plugins/appointment/entries/readonly_entry_type_identity_picker.html";
