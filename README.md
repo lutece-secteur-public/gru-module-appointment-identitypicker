@@ -17,8 +17,8 @@ Il permet de rechercher et pré-remplir les données d'identité d'un usager lor
 |---|---|
 | lutece-core | [7.0.0, 7.9.9) |
 | plugin-appointment | [3.0.11, 3.9.9) |
-| plugin-identitypicker | [1.0.0-SNAPSHOT, ) |
-| module-genericattributes-identitypicker | [1.0.0-SNAPSHOT, ) |
+| plugin-identitypicker | [1.0.0-SNAPSHOT, 1.9.9) |
+| module-genericattributes-identitypicker | [1.0.0-SNAPSHOT, 1.9.9) |
 
 La propriété `identitypicker.default.client.code` doit être configurée avec le code client de l'Identity Store.
 
